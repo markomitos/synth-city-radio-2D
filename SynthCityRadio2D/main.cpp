@@ -9,6 +9,7 @@
 #include <GLFW/glfw3.h>
 #include "graphics_utils.h"
 
+
 int main(void)
 {
     GLFWwindow* window;
@@ -37,10 +38,20 @@ int main(void)
 	initVAO(&VAO, &VBO, vertices, sizeof(vertices), stride);
     unsigned int sunVAO, sunVBO;
     unsigned int sunShader = createShader("Shaders/sun.vert", "Shaders/sun.frag");
-    std::vector<float> sunVertices = generateCircleVertices(0.0f, 0.26f, 0.25f, 500);
+    std::vector<float> sunVertices = generateCircleVertices(0.0f, 0.26f, 0.25f, 100);
     stride = (2) * sizeof(float);
-    initCircleVAO(&sunVAO, &sunVBO, sunVertices.data(), sunVertices.size() * sizeof(float), stride);
+    init2cordVAO(&sunVAO, &sunVBO, sunVertices.data(), sunVertices.size() * sizeof(float), stride);
 	unsigned backgroundTexture = loadTexture("Textures/city-background.png", unifiedShader);
+    
+    unsigned int horizontalVAO, horizontalVBO;
+    std::vector<float> horizontalVertices = generateHorizontalLines(10);  
+    initVAO(&horizontalVAO, &horizontalVBO, horizontalVertices.data(), horizontalVertices.size() * sizeof(float), 2 * sizeof(float));
+
+    unsigned int verticalVAO, verticalVBO;
+    std::vector<float> verticalVertices = generateVerticalLines(20);  
+    init2cordVAO(&verticalVAO, &verticalVBO, verticalVertices.data(), verticalVertices.size() * sizeof(float), 2 * sizeof(float));
+
+    unsigned int gridShader = createShader("Shaders/grid.vert", "Shaders/grid.frag");
 
     while (!glfwWindowShouldClose(window))
     {
@@ -50,11 +61,13 @@ int main(void)
             glfwSetWindowShouldClose(window, GL_TRUE);
         }
 
-        glClearColor(0.5, 0.5, 0.5, 1.0);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         drawBackground(backgroundTexture, unifiedShader, &VAO);
         drawSun(sunShader, &sunVAO, sunVertices.size() / 2);
+        drawGrid(gridShader, &horizontalVAO, horizontalVertices.size() / 2, &verticalVAO, verticalVertices.size()/2);
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -66,7 +79,12 @@ int main(void)
     glDeleteProgram(unifiedShader);
     glDeleteBuffers(1, &sunVBO);
     glDeleteVertexArrays(1, &sunVAO);
+    glDeleteBuffers(1, &horizontalVBO);
+    glDeleteVertexArrays(1, &horizontalVAO);
+    glDeleteBuffers(1, &verticalVBO);
+    glDeleteVertexArrays(1, &verticalVAO);
     glDeleteProgram(sunShader);
+    glDeleteProgram(gridShader);
 
     glfwTerminate();
     return 0;

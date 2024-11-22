@@ -52,7 +52,7 @@ void initVAO(unsigned int* VAO, unsigned int* VBO, float vertices[], unsigned in
     glBindVertexArray(0);
 }
 
-void initCircleVAO(unsigned int* VAO, unsigned int* VBO, float vertices[], unsigned int size, unsigned int stride)
+void init2cordVAO(unsigned int* VAO, unsigned int* VBO, float vertices[], unsigned int size, unsigned int stride)
 {
     glGenVertexArrays(1, VAO);
     glGenBuffers(1, VBO);
@@ -236,4 +236,54 @@ void drawSun(unsigned int shader, unsigned int *VAO, int size)
     glDrawArrays(GL_TRIANGLE_FAN, 0, size);
     glBindVertexArray(0);
     glDisable(GL_BLEND);
+}
+
+std::vector<float> generateHorizontalLines(int numLines) {
+    std::vector<float> vertices;
+
+    float spacing = 1.0f / numLines; 
+    for (int i = 0; i < numLines; ++i) {
+        float yPos = -1.0f + i * spacing;  
+        vertices.push_back(-1.0f);
+        vertices.push_back(yPos);  
+
+        vertices.push_back(1.0f);   
+        vertices.push_back(yPos);
+    }
+
+    return vertices;
+}
+
+std::vector<float> generateVerticalLines(int numLines) {
+    std::vector<float> vertices;
+
+    float spacing = 2.0f / numLines;
+    for (int i = 0; i < numLines; ++i) {
+        float xPos = -1.0f + i * spacing;
+        float xPosStart = xPos + (numLines / -2.0f + i)*0.15;
+        vertices.push_back(xPosStart);
+        vertices.push_back(-1.0f);  
+        vertices.push_back(xPos);
+        vertices.push_back(0.0f);   
+    }
+
+    return vertices;
+}
+
+void drawGrid(unsigned int shader, unsigned int *horizontalVAO, unsigned int horizontalSize, unsigned int *verticalVAO, unsigned int verticalSize)
+{
+    glUseProgram(shader);
+    glUniform1i(glGetUniformLocation(shader, "isHorizontal"), 1);
+    unsigned int timeLoc = glGetUniformLocation(shader, "time");
+    glUniform1f(timeLoc, glfwGetTime());
+    glBindVertexArray(*horizontalVAO);
+    glDrawArrays(GL_LINES, 0, horizontalSize);
+
+
+    glUniform1i(glGetUniformLocation(shader, "isHorizontal"), 0);
+    timeLoc = glGetUniformLocation(shader, "time");
+    glUniform1f(timeLoc, glfwGetTime());
+    glBindVertexArray(*verticalVAO);
+    glDrawArrays(GL_LINES, 0, verticalSize);
+    glUseProgram(0);
 }

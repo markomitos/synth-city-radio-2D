@@ -19,7 +19,7 @@ void main() {
     float transparency = 1.0;
 
     if (vPos.y < 0.25){
-        float stripePattern = sin(time * 3.5 + vPos.y * 100.0);
+        float stripePattern = sin(time * 4 + vPos.y * 100.0);
         transparency = smoothstep(0.1, 0.2, stripePattern);
     }
 
