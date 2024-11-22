@@ -8,10 +8,21 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "graphics_utils.h"
+#include "SFML/Graphics.hpp"
+#include "SFML/Audio.hpp"
+#include "tinyfiledialogs.h"
+#include <filesystem>
+#include <thread>
 
+#include "globals.h"
+#include "music_utils.h"
+namespace fs = std::filesystem;
 
 int main(void)
 {
+    std::vector<std::string> musicFiles = chooseFiles();
+    std::thread musicThread(playMusicFiles, musicFiles);
+
     GLFWwindow* window;
     unsigned int wWidth = 800;
     unsigned int wHeight = 800;
@@ -85,6 +96,11 @@ int main(void)
     glDeleteVertexArrays(1, &verticalVAO);
     glDeleteProgram(sunShader);
     glDeleteProgram(gridShader);
+
+    musicThreadRunning = false;
+    if (musicThread.joinable()) {
+        musicThread.join();
+    }
 
     glfwTerminate();
     return 0;

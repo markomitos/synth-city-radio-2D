@@ -1,0 +1,10 @@
+﻿  main.cpp
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\main.cpp(54,75): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\main.cpp(59,98): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\main.cpp(63,95): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\main.cpp(79,56): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\main.cpp(80,114): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\main.cpp(80,72): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+  music_utils.cpp
+  Generating Code...
+  SynthCityRadio2D.vcxproj -> C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\x64\Debug\SynthCityRadio2D.exe
