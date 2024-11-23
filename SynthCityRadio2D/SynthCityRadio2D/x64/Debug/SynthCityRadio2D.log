@@ -1,10 +1,62 @@
-﻿  main.cpp
-C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\main.cpp(54,75): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
-C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\main.cpp(59,98): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
-C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\main.cpp(63,95): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
-C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\main.cpp(79,56): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\main.cpp(80,114): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
-C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\main.cpp(80,72): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
-  music_utils.cpp
-  Generating Code...
+﻿  graphics_utils.cpp
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(17,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(19,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(19,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(20,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(21,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(21,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(22,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(22,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(23,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(26,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(26,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(27,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(28,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(28,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(29,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(31,2): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(31,8): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(32,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(33,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(33,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(34,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(37,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(37,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(38,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(39,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(39,11): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(42,2): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(42,8): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(43,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(44,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(44,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(45,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(46,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(46,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(48,11): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(51,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(51,11): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(52,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(52,11): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(53,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(53,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(54,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(54,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(57,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(57,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(58,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(58,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(59,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(59,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(60,5): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\globals.h(60,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\graphics_utils.cpp(223,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\graphics_utils.cpp(240,37): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\graphics_utils.cpp(268,25): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\graphics_utils.cpp(283,37): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\graphics_utils.cpp(290,37): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\graphics_utils.cpp(302,56): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\graphics_utils.cpp(342,20): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\graphics_utils.cpp(345,72): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\graphics_utils.cpp(345,33): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   SynthCityRadio2D.vcxproj -> C:\Users\marko\Desktop\fakultet\7.semestar\racunarska-grafika\projekat\synth-city-radio-2D\SynthCityRadio2D\x64\Debug\SynthCityRadio2D.exe

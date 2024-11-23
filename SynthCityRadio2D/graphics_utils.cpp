@@ -8,9 +8,14 @@
 #include "stb_image.h"
 #include <vector>
 #define _USE_MATH_DEFINES
+#include <algorithm>
 #include <cmath>
 #include <math.h>
+#include "music_utils.h"
+#include "globals.h"
 
+bool isDragging = false;
+float knobPosition = 0.0f;
 
 int initGlfw(GLFWwindow*& window, int width, int height, const char* title)
 {
@@ -286,4 +291,85 @@ void drawGrid(unsigned int shader, unsigned int *horizontalVAO, unsigned int hor
     glBindVertexArray(*verticalVAO);
     glDrawArrays(GL_LINES, 0, verticalSize);
     glUseProgram(0);
+}
+
+float mapRange(float x, float sourceMin, float sourceMax, float targetMin, float targetMax) {
+    return targetMin + ((x - sourceMin) / (sourceMax - sourceMin)) * (targetMax - targetMin);
+}
+
+void updateKnobPosition()
+{
+    knobPosition = mapRange(getCurrentSeek(), 0, 1, 0, 0.8);
+}
+
+void drawControls(unsigned shader, unsigned* VAO)
+{
+    glUseProgram(shader);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glUniform1i(glGetUniformLocation(shader, "isKnob"), 0);
+    glBindVertexArray(*VAO);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glDrawArrays(GL_TRIANGLES, 4, 3);
+    if (isMusicPlaying)
+    {
+        glDrawArrays(GL_TRIANGLE_STRIP, 7, 4);
+        glDrawArrays(GL_TRIANGLE_STRIP, 11, 4);
+    }else
+    {
+        glDrawArrays(GL_TRIANGLES, 15, 3);
+    }
+    glDrawArrays(GL_TRIANGLES, 18, 3);
+    glDrawArrays(GL_TRIANGLE_STRIP, 21, 4);
+    glDrawArrays(GL_TRIANGLE_STRIP, 25, 4);
+    glUniform1i(glGetUniformLocation(shader, "isKnob"), 1);
+    updateKnobPosition();
+    glUniform1f(glGetUniformLocation(shader, "knobPosition"), knobPosition);
+    glDrawArrays(GL_TRIANGLE_STRIP, 29, 4);
+    glBindVertexArray(0);
+    glDisable(GL_BLEND);
+    glUseProgram(0);
+}
+
+void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    if (isDragging) {
+        float sliderX = 300.0f;
+        float sliderWidth = 400.0f;
+        int windowWidth, windowHeight;
+        glfwGetWindowSize(window, &windowWidth, &windowHeight);
+
+        float seek = (xpos - sliderX) / sliderWidth;
+        seek = std::clamp(seek, 0.0f, 1.0f);
+        seekTo(seek);
+        knobPosition = mapRange(xpos, sliderX, sliderX+ sliderWidth,0, 0.8);
+    }
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+    {
+        double xpos, ypos;
+        glfwGetCursorPos(window, &xpos, &ypos);
+        
+        if(xpos >= 375 && xpos <= 425 && ypos >= 700 && ypos <= 750){
+            playPreviousSong();
+        }
+        else if(xpos >= 480 && xpos <= 520 && ypos >= 700 && ypos <= 750) {
+            togglePlayPause();
+        }
+        else if(xpos >= 575 && xpos <= 625 && ypos >= 700 && ypos <= 750) {
+            playNextSong();
+        }else if (xpos>=300 && xpos<=700)
+        {
+            isDragging = true;
+        }
+
+    }
+	else{
+        isDragging = false;
+    }
+    
+
 }

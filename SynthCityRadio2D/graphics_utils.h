@@ -14,3 +14,6 @@ void drawSun(unsigned int shader, unsigned int* VAO, int size);
 std::vector<float> generateHorizontalLines(int numLines);
 std::vector<float> generateVerticalLines(int numLines);
 void drawGrid(unsigned int shader, unsigned int* horizontalVAO, unsigned int horizontalSize, unsigned int* verticalVAO, unsigned int verticalSize);
+void drawControls(unsigned shader, unsigned* VAO);
+void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);

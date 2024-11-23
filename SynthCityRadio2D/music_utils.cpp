@@ -12,11 +12,14 @@
 #include "globals.h"
 
 namespace fs = std::filesystem;
+sf::Music music;
+size_t currentSongIndex = 0;
+std::vector<std::string> musicFiles;
 
 std::vector<std::string> chooseFiles()
 {
     const char* folderPath = tinyfd_selectFolderDialog("Select a Folder", NULL);
-    std::vector<std::string> musicFiles;
+    
     if (!folderPath) {
         std::cout << "No folder selected." << std::endl;
         return musicFiles;
@@ -40,7 +43,6 @@ void playMusicFiles(std::vector<std::string> musicFiles)
 {
     std::cout << "Found " << musicFiles.size() << " music files." << std::endl;
 
-    sf::Music music;
     for (const auto& file : musicFiles) {
         std::cout << "Playing: " << file << std::endl;
 
@@ -56,5 +58,75 @@ void playMusicFiles(std::vector<std::string> musicFiles)
         }
 
     }
+
+}
+
+void togglePlayPause() {
+    if (isMusicPlaying) {
+        music.pause();  
+        isMusicPlaying = false;  
+        std::cout << "Music paused." << std::endl;
+    }
+    else {
+        music.play();  
+        isMusicPlaying = true;  
+        std::cout << "Music playing." << std::endl;
+    }
+}
+
+void playNextSong() {
+    if (music.getStatus() == sf::Music::Playing) {
+        music.stop();
+    }
+
+    currentSongIndex = (currentSongIndex + 1) % musicFiles.size();
+
+    if (!music.openFromFile(musicFiles[currentSongIndex])) {
+        std::cerr << "Failed to load " << musicFiles[currentSongIndex] << std::endl;
+        return;
+    }
+
+    std::cout << "Playing next song: " << musicFiles[currentSongIndex] << std::endl;
+    music.play();
+    isMusicPlaying = true;  
+}
+
+void playPreviousSong() {
+    if (music.getStatus() == sf::Music::Playing) {
+        music.stop();  
+    }
+
+    if (currentSongIndex == 0) {
+        currentSongIndex = musicFiles.size() - 1;
+    }
+    else {
+        currentSongIndex--;
+    }
+
+    if (!music.openFromFile(musicFiles[currentSongIndex])) {
+        std::cerr << "Failed to load " << musicFiles[currentSongIndex] << std::endl;
+        return;
+    }
+
+    std::cout << "Playing previous song: " << musicFiles[currentSongIndex] << std::endl;
+    music.play();
+    isMusicPlaying = true;  
+}
+
+void seekTo(float position) {
+    if (music.getStatus() == sf::Music::Playing || music.getStatus() == sf::Music::Paused) {
+        sf::Time duration = music.getDuration();
+        sf::Time seekPosition = duration * position;
+        music.setPlayingOffset(seekPosition);
+    }
+}
+
+float getCurrentSeek()
+{
+    float currentSeek = music.getPlayingOffset().asSeconds();
+	float totalDuration = music.getDuration().asSeconds();
+
+	float normalizedSeek = currentSeek / totalDuration;
+	return std::clamp(normalizedSeek, 0.0f, 1.0f);
 
 }

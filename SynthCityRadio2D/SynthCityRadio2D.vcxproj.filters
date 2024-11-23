@@ -29,9 +29,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="basic.frag" />
-    <None Include="basic.vert" />
+    <None Include="Shaders\basic.frag" />
+    <None Include="Shaders\basic.vert" />
     <None Include="packages.config" />
+    <None Include="Shaders\grid.frag" />
+    <None Include="Shaders\grid.vert" />
+    <None Include="Shaders\sun.frag" />
+    <None Include="Shaders\sun.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image.h">
