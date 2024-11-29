@@ -1,9 +1,16 @@
 #pragma once
+#include <map>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 int initGlfw(GLFWwindow*& window, int width, int height, const char* title);
 void initVAO(unsigned int* VAO, unsigned int* VBO, float vertices[], unsigned int size, unsigned int stride);
 void init2cordVAO(unsigned int* VAO, unsigned int* VBO, float vertices[], unsigned int size, unsigned int stride);
+void initTextVAO(unsigned int* VAO, unsigned int* VBO);
 unsigned int createShader(const char* vsSource, const char* fsSource);
 unsigned int compileShader(GLenum type, const char* source);
 unsigned int loadImageToTexture(const char* filePath);
@@ -17,3 +24,6 @@ void drawGrid(unsigned int shader, unsigned int* horizontalVAO, unsigned int hor
 void drawControls(unsigned shader, unsigned* VAO);
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+void RenderText(unsigned shader, std::string text, float x, float y, float scale, glm::vec3 color, unsigned* VAO, unsigned* VBO);
+int initFreeType();
+void drawText(unsigned int shader, unsigned int* VAO, unsigned int* VBO);

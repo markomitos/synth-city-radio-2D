@@ -1,21 +1,23 @@
 #define _CRT_SECURE_NO_WARNINGS
 	
 #include <iostream>
-#include <fstream>
-#include <sstream>
+
 #include <vector>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "graphics_utils.h"
-#include "SFML/Graphics.hpp"
 #include "SFML/Audio.hpp"
-#include "tinyfiledialogs.h"
 #include <filesystem>
 #include <thread>
 
 #include "globals.h"
 #include "music_utils.h"
+#include <glm/vec2.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
 namespace fs = std::filesystem;
 
 int main(void)
@@ -35,6 +37,16 @@ int main(void)
         std::cout << "GLEW failed to load!\n";
         return 3;
     }
+
+    if (initFreeType()==-1)
+    {
+        std::cout << "FreeType failed to load!\n";
+        return 4;
+    }
+
+    unsigned int textVAO, textVBO;
+	initTextVAO(&textVAO,&textVBO);
+
     unsigned int unifiedShader = createShader("Shaders/basic.vert", "Shaders/basic.frag");
     unsigned int VAO, VBO;
 
@@ -61,7 +73,7 @@ int main(void)
     unsigned int controlsVAO, controlsVBO;
     init2cordVAO(&controlsVAO, &controlsVBO, controlsVetices, sizeof(controlsVetices), stride);
     unsigned int controlsShader = createShader("Shaders/controls.vert", "Shaders/controls.frag");
-
+    unsigned int textShader = createShader("Shaders/text.vert", "Shaders/text.frag");
     glfwSetCursorPosCallback(window, cursor_position_callback);
     glfwSetMouseButtonCallback(window, mouse_button_callback);
 
@@ -80,12 +92,12 @@ int main(void)
         drawSun(sunShader, &sunVAO, sunVertices.size() / 2);
         drawGrid(gridShader, &horizontalVAO, horizontalVertices.size() / 2, &verticalVAO, verticalVertices.size() / 2);
         drawControls(controlsShader, &controlsVAO);
-
+        drawText(textShader, &textVAO, &textVBO);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-
+     
     glDeleteTextures(1, &backgroundTexture);
     glDeleteBuffers(1, &VBO);
     glDeleteVertexArrays(1, &VAO);
@@ -98,9 +110,12 @@ int main(void)
     glDeleteVertexArrays(1, &verticalVAO);
     glDeleteBuffers(1, &controlsVBO);
     glDeleteVertexArrays(1, &controlsVAO);
+    glDeleteBuffers(1, &textVBO);
+    glDeleteVertexArrays(1, &textVAO);
     glDeleteProgram(sunShader);
     glDeleteProgram(gridShader);
     glDeleteProgram(controlsShader);
+    glDeleteProgram(textShader);
 
     musicThreadRunning = false;
     if (musicThread.joinable()) {

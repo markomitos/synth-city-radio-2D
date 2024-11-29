@@ -39,6 +39,32 @@ std::vector<std::string> chooseFiles()
     return musicFiles;
 }
 
+void changeSongDisplay(std::string file)
+{
+    int startIndex = file.find_last_of("\\") + 1;
+    int endIndex = file.find_last_of(".");
+    if (startIndex >= 0) currentSong = file.substr(startIndex, endIndex - startIndex);
+    std::string totalDurationMinutes = std::to_string(static_cast<int>(music.getDuration().asSeconds()) / 60);
+    if (totalDurationMinutes.size() < 2) totalDurationMinutes = "0" + totalDurationMinutes;
+    std::string totalDurationSeconds = std::to_string(static_cast<int>(music.getDuration().asSeconds()) % 60);
+    if (totalDurationSeconds.size() < 2) totalDurationSeconds = "0" + totalDurationSeconds;
+    std::string currentDurationMinutes = std::to_string(static_cast<int>(music.getPlayingOffset().asSeconds()) / 60);
+    if (currentDurationMinutes.size() < 2) currentDurationMinutes = "0" + currentDurationMinutes;
+    std::string currentDurationSeconds = std::to_string(static_cast<int>(music.getPlayingOffset().asSeconds()) % 60);
+    if (currentDurationSeconds.size() < 2) currentDurationSeconds = "0" + currentDurationSeconds;
+	totalDuration = totalDurationMinutes + ":" + totalDurationSeconds;
+    currentDuration = currentDurationMinutes + ":" + currentDurationSeconds;
+}
+
+void changeCurrentOffset()
+{
+    std::string currentDurationMinutes = std::to_string(static_cast<int>(music.getPlayingOffset().asSeconds()) / 60);
+    if (currentDurationMinutes.size() < 2) currentDurationMinutes = "0" + currentDurationMinutes;
+    std::string currentDurationSeconds = std::to_string(static_cast<int>(music.getPlayingOffset().asSeconds()) % 60);
+    if (currentDurationSeconds.size() < 2) currentDurationSeconds = "0" + currentDurationSeconds;
+    currentDuration = currentDurationMinutes + ":" + currentDurationSeconds;
+}
+
 void playMusicFiles(std::vector<std::string> musicFiles)
 {
     std::cout << "Found " << musicFiles.size() << " music files." << std::endl;
@@ -51,7 +77,7 @@ void playMusicFiles(std::vector<std::string> musicFiles)
             continue;
         }
         music.play();
-
+        changeSongDisplay(file);
         while (musicThreadRunning) {
 
             sf::sleep(sf::seconds(0.1f));
@@ -88,7 +114,8 @@ void playNextSong() {
 
     std::cout << "Playing next song: " << musicFiles[currentSongIndex] << std::endl;
     music.play();
-    isMusicPlaying = true;  
+    isMusicPlaying = true;
+    changeSongDisplay(musicFiles[currentSongIndex]);
 }
 
 void playPreviousSong() {
@@ -110,7 +137,8 @@ void playPreviousSong() {
 
     std::cout << "Playing previous song: " << musicFiles[currentSongIndex] << std::endl;
     music.play();
-    isMusicPlaying = true;  
+    isMusicPlaying = true;
+    changeSongDisplay(musicFiles[currentSongIndex]);
 }
 
 void seekTo(float position) {
@@ -127,6 +155,7 @@ float getCurrentSeek()
 	float totalDuration = music.getDuration().asSeconds();
 
 	float normalizedSeek = currentSeek / totalDuration;
+    changeCurrentOffset();
 	return std::clamp(normalizedSeek, 0.0f, 1.0f);
 
 }
