@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include <vector>
+#include <chrono>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -74,15 +75,25 @@ int main(void)
     init2cordVAO(&controlsVAO, &controlsVBO, controlsVetices, sizeof(controlsVetices), stride);
     unsigned int controlsShader = createShader("Shaders/controls.vert", "Shaders/controls.frag");
     unsigned int textShader = createShader("Shaders/text.vert", "Shaders/text.frag");
-    glfwSetCursorPosCallback(window, cursor_position_callback);
+
+    stride = (5) * sizeof(float);
+    unsigned int volumeControlsVAO, volumeControlsVBO;
+    init2cordRGBVAO(&volumeControlsVAO, &volumeControlsVBO, volumeControlsVetices, sizeof(volumeControlsVetices), stride);
+    unsigned int volumeControlsShader = createShader("Shaders/volume.vert", "Shaders/volume.frag");
+
+
+	glfwSetCursorPosCallback(window, cursor_position_callback);
     glfwSetMouseButtonCallback(window, mouse_button_callback);
 
     while (!glfwWindowShouldClose(window))
     {
-
-        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        {
+        std::chrono::steady_clock::time_point frameStart = std::chrono::high_resolution_clock::now();
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             glfwSetWindowShouldClose(window, GL_TRUE);
+        }else if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS) {
+            decrementVolume(5);
+        }else if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS) {
+            incrementVolume(5);
         }
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -92,9 +103,21 @@ int main(void)
         drawSun(sunShader, &sunVAO, sunVertices.size() / 2);
         drawGrid(gridShader, &horizontalVAO, horizontalVertices.size() / 2, &verticalVAO, verticalVertices.size() / 2);
         drawControls(controlsShader, &controlsVAO);
+        drawVolumeControls(volumeControlsShader, &volumeControlsVAO);
         drawText(textShader, &textVAO, &textVBO);
         glfwSwapBuffers(window);
         glfwPollEvents();
+
+        std::chrono::steady_clock::time_point frameEnd = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<float> elapsed = frameEnd - frameStart;
+
+        float targetFrameTime = 1.0f / 60.0f;
+        float elapsedTime = elapsed.count();
+
+        if (elapsedTime < targetFrameTime)
+        {
+            std::this_thread::sleep_for(std::chrono::duration<float>(targetFrameTime - elapsedTime));
+        }
     }
 
      

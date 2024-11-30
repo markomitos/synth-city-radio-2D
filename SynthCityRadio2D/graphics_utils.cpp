@@ -25,8 +25,13 @@
 
 #include FT_FREETYPE_H
 
+#include <chrono>
+
+float textOffset = 0.0f;
 bool isDragging = false;
+bool isDraggingVolume = false;
 float knobPosition = 0.0f;
+float volumeKnobPosition = 0.0f;
 
 int initGlfw(GLFWwindow*& window, int width, int height, const char* title)
 {
@@ -79,6 +84,24 @@ void init2cordVAO(unsigned int* VAO, unsigned int* VBO, float vertices[], unsign
 
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, (void*)0);
     glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+}
+
+void init2cordRGBVAO(unsigned int* VAO, unsigned int* VBO, float vertices[], unsigned int size, unsigned int stride)
+{
+    glGenVertexArrays(1, VAO);
+    glGenBuffers(1, VBO);
+
+    glBindVertexArray(*VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, *VBO);
+    glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (void*)(2 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -326,6 +349,12 @@ void updateKnobPosition()
     knobPosition = mapRange(getCurrentSeek(), 0, 1, 0, 0.8);
 }
 
+
+void updateVolumeKnobPosition()
+{
+    volumeKnobPosition = mapRange(getCurrentVolume(), 0, 100, 0, 0.5);
+}
+
 void drawControls(unsigned shader, unsigned* VAO)
 {
     glUseProgram(shader);
@@ -355,6 +384,23 @@ void drawControls(unsigned shader, unsigned* VAO)
     glUseProgram(0);
 }
 
+void drawVolumeControls(unsigned shader, unsigned* VAO)
+{
+    glUseProgram(shader);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glUniform1i(glGetUniformLocation(shader, "isKnob"), 0);
+    glBindVertexArray(*VAO);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glUniform1i(glGetUniformLocation(shader, "isKnob"), 1);
+    updateVolumeKnobPosition();
+    glUniform1f(glGetUniformLocation(shader, "knobPosition"), volumeKnobPosition);
+    glDrawArrays(GL_TRIANGLE_STRIP, 4, 4);
+    glBindVertexArray(0);
+    glDisable(GL_BLEND);
+    glUseProgram(0);
+}
+
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
     if (isDragging) {
@@ -367,6 +413,17 @@ void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
         seek = std::clamp(seek, 0.0f, 1.0f);
         seekTo(seek);
         knobPosition = mapRange(xpos, sliderX, sliderX+ sliderWidth,0, 0.8);
+    }
+    else if (isDraggingVolume)
+    {
+        float sliderX = 375.0f;
+        float sliderWidth = 250.0f;
+        int windowWidth, windowHeight;
+        glfwGetWindowSize(window, &windowWidth, &windowHeight);
+        float seek = (xpos - sliderX) / sliderWidth;
+        seek = std::clamp(seek, 0.0f, 1.0f);
+        setCurrentVolume(seek*100);
+        volumeKnobPosition = mapRange(xpos, sliderX, sliderX + sliderWidth, 0, 0.5);
     }
 }
 
@@ -385,14 +442,18 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
         }
         else if(xpos >= 575 && xpos <= 625 && ypos >= 700 && ypos <= 750) {
             playNextSong();
-        }else if (xpos>=300 && xpos<=700 && ypos>= 790 && ypos<=820)
-        {
+        }
+    	else if (xpos>=300 && xpos<=700 && ypos>= 790 && ypos<=820) {
             isDragging = true;
+        }
+        else if (xpos >= 375 && xpos <= 625 && ypos >= 840 && ypos <= 870) {
+            isDraggingVolume = true;
         }
 
     }
 	else{
         isDragging = false;
+        isDraggingVolume = false;
     }
     
 
@@ -447,6 +508,122 @@ void RenderText(unsigned shader, std::string text, float x, float y, float scale
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
+
+void RenderScrollingText(
+    unsigned shader,
+    const std::string& text,
+    float x,
+    float y,
+    float scale,
+    glm::vec3 color,
+    unsigned* VAO,
+    unsigned* VBO,
+    float maxWidth,
+    float scrollSpeed,
+    float gapWidth)
+{
+    static float textOffset = 0.0f; 
+
+    float textLength = 0.0f; 
+    for (const char& c : text) {
+        Character ch = Characters[c];
+        textLength += (ch.Advance >> 6) * scale; 
+    }
+
+    if (textOffset > textLength + gapWidth) {
+        textOffset = 0.0f;
+    }
+
+    textOffset += scrollSpeed;
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glm::mat4 projection = glm::ortho(0.0f, 1000.0f, 0.0f, 1000.0f, -1.0f, 1.0f);
+    GLint projLoc = glGetUniformLocation(shader, "projection");
+    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+    glUseProgram(shader);
+    glUniform3f(glGetUniformLocation(shader, "textColor"), color.x, color.y, color.z);
+    glActiveTexture(GL_TEXTURE0);
+    glBindVertexArray(*VAO);
+
+    float cursorX = -textOffset; 
+
+    for (const char& c : text) {
+        Character ch = Characters[c];
+
+        float xpos = x + cursorX + ch.Bearing.x * scale;
+        float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+        float w = ch.Size.x * scale;
+        float h = ch.Size.y * scale;
+
+        if (cursorX > maxWidth) {
+            break;
+        }
+        
+        if (cursorX + w > 0.0f) {
+            float vertices[6][4] = {
+                { xpos,     ypos + h,   0.0f, 0.0f },
+                { xpos,     ypos,       0.0f, 1.0f },
+                { xpos + w, ypos,       1.0f, 1.0f },
+
+                { xpos,     ypos + h,   0.0f, 0.0f },
+                { xpos + w, ypos,       1.0f, 1.0f },
+                { xpos + w, ypos + h,   1.0f, 0.0f }
+            };
+
+
+            glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+            glBindBuffer(GL_ARRAY_BUFFER, *VBO);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
+
+        cursorX += (ch.Advance >> 6) * scale;
+    }
+
+
+    cursorX = -textOffset + textLength + gapWidth; 
+    for (const char& c : text) {
+        Character ch = Characters[c];
+
+        float xpos = x + cursorX + ch.Bearing.x * scale;
+        float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+        float w = ch.Size.x * scale;
+        float h = ch.Size.y * scale;
+
+        if (cursorX > maxWidth) {
+            break;
+        }
+
+        if (cursorX + w > 0.0f) {
+            float vertices[6][4] = {
+                { xpos,     ypos + h,   0.0f, 0.0f },
+                { xpos,     ypos,       0.0f, 1.0f },
+                { xpos + w, ypos,       1.0f, 1.0f },
+
+                { xpos,     ypos + h,   0.0f, 0.0f },
+                { xpos + w, ypos,       1.0f, 1.0f },
+                { xpos + w, ypos + h,   1.0f, 0.0f }
+            };
+
+            glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+            glBindBuffer(GL_ARRAY_BUFFER, *VBO);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
+
+        cursorX += (ch.Advance >> 6) * scale;
+    }
+
+    glBindVertexArray(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+
+
 
 int initFreeType()
 {
@@ -513,8 +690,20 @@ int initFreeType()
 
 void drawText(unsigned int shader, unsigned int* VAO, unsigned int* VBO)
 {
-    RenderText(shader, currentSong, 230.0f, 340.0f, 1.0f, glm::vec3(1, 1, 1), VAO, VBO);
-    RenderText(shader, currentDuration, 230.0f, 190.0f, 0.5f, glm::vec3(1, 1, 1), VAO, VBO);
+    RenderScrollingText(
+        shader,
+        currentSong,
+        230.0f,
+        340.0f,
+        1.0f, 
+        glm::vec3(1, 1, 1),
+        VAO,
+        VBO,
+        540.0f, 
+        0.5f,
+        100.0f
+    );
+	RenderText(shader, currentDuration, 230.0f, 190.0f, 0.5f, glm::vec3(1, 1, 1), VAO, VBO);
     RenderText(shader, totalDuration, 710.0f, 190.0f, 0.5f, glm::vec3(1, 1, 1), VAO, VBO);
 
 }

@@ -159,3 +159,23 @@ float getCurrentSeek()
 	return std::clamp(normalizedSeek, 0.0f, 1.0f);
 
 }
+
+float getCurrentVolume()
+{
+    return music.getVolume();
+}
+
+void setCurrentVolume(float volume)
+{
+    music.setVolume(volume);
+}
+
+void decrementVolume(float decrement)
+{
+    music.setVolume(std::clamp(music.getVolume() - decrement,0.0f, 100.0f));
+}
+
+void incrementVolume(float increment)
+{
+    music.setVolume(std::clamp(music.getVolume() + increment, 0.0f, 100.0f));
+}

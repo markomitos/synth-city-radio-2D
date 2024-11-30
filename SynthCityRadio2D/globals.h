@@ -66,6 +66,22 @@ inline float controlsVetices[] = {
 
 };
 
+inline float volumeControlsVetices[] = {
+
+    //background
+    -0.25, -0.7, 0.5, 0.5, 0.5,
+    -0.25, -0.71, 0.5, 0.5, 0.5,
+    0.25, -0.70, 0.5, 0.5, 0.5,
+    0.25, -0.71, 0.5, 0.5, 0.5,
+
+    //slider
+	- 0.25, -0.7, 1, 1, 1,
+    -0.25, -0.71, 1, 1, 1,
+    -0.249, -0.70, 1, 1, 1,
+    -0.249, -0.71, 1, 1, 1,
+
+};
+
 inline std::string currentSong = "No song playing";
 inline std::string currentDuration = "0:00";
 inline std::string totalDuration = "0:00";
