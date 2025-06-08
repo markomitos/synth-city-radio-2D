@@ -93,3 +93,53 @@ struct Character {
     unsigned int Advance;    // Offset to advance to next glyph
 };
 inline std::map<char, Character> Characters;
+
+const float cubeVertices[] = {
+    //+Z (Front) face.
+	// X      Y      Z       S     T
+    -1.0f, -0.2f,  1.0f,    0.0f, 0.0f,
+     1.0f, -0.2f,  1.0f,    1.0f, 0.0f,
+     1.0f,  1.0f,  1.0f,    1.0f, 1.0f,
+
+     1.0f,  1.0f,  1.0f,    1.0f, 1.0f,
+    -1.0f,  1.0f,  1.0f,    0.0f, 1.0f,
+    -1.0f, -0.2f,  1.0f,    0.0f, 0.0f,
+
+    //-Z (Back) face.
+     1.0f, -0.2f, -1.0f,    0.0f, 0.0f,
+    -1.0f, -0.2f, -1.0f,    1.0f, 0.0f,
+    -1.0f,  1.0f, -1.0f,    1.0f, 1.0f,
+
+     1.0f, -0.2f, -1.0f,    0.0f, 0.0f,
+    -1.0f,  1.0f, -1.0f,    1.0f, 1.0f,
+     1.0f,  1.0f, -1.0f,    0.0f, 1.0f,
+
+     //+X (Right) face.
+      1.0f, -0.2f,  1.0f,    0.0f, 0.0f,
+      1.0f, -0.2f, -1.0f,    1.0f, 0.0f,
+      1.0f,  1.0f, -1.0f,    1.0f, 1.0f,
+
+      1.0f,  1.0f, -1.0f,    1.0f, 1.0f,
+      1.0f,  1.0f,  1.0f,    0.0f, 1.0f,
+      1.0f, -0.2f,  1.0f,    0.0f, 0.0f,
+
+      //-X (Left) face.
+     -1.0f, -0.2f, -1.0f,    0.0f, 0.0f,
+     -1.0f, -0.2f,  1.0f,    1.0f, 0.0f,
+     -1.0f,  1.0f,  1.0f,    1.0f, 1.0f,
+
+     -1.0f,  1.0f,  1.0f,    1.0f, 1.0f,
+     -1.0f,  1.0f, -1.0f,    0.0f, 1.0f,
+     -1.0f, -0.2f, -1.0f,    0.0f, 0.0f,
+};
+
+const float topFaceVertices[] = {
+    //+Y (Top) face.
+     1.0f,  1.0f,  1.0f,    1.0f, 1.0f,
+     1.0f,  1.0f, -1.0f,    1.0f, 0.0f,
+    -1.0f,  1.0f, -1.0f,    0.0f, 0.0f,
+
+     1.0f,  1.0f,  1.0f,    1.0f, 1.0f,
+    -1.0f,  1.0f, -1.0f,    0.0f, 0.0f,
+    -1.0f,  1.0f,  1.0f,    0.0f, 1.0f
+};

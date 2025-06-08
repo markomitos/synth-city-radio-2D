@@ -101,6 +101,7 @@ void togglePlayPause() {
 }
 
 void playNextSong() {
+    if (musicFiles.empty()) return;
     if (music.getStatus() == sf::Music::Playing) {
         music.stop();
     }
@@ -119,6 +120,7 @@ void playNextSong() {
 }
 
 void playPreviousSong() {
+    if (musicFiles.empty()) return;
     if (music.getStatus() == sf::Music::Playing) {
         music.stop();  
     }

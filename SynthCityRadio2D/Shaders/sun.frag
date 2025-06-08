@@ -1,13 +1,13 @@
 #version 330 core
 
-in vec2 vPos; 
+in vec3 vPos; 
 
 out vec4 FragColor;
 
 uniform float time;
 
 void main() {
-    float t = (vPos.y + 1.0) / 2.0;
+    float t =  (vPos.y + 0.2) / 0.4; 
 
     vec3 topColor = vec3(1.0, 0.9, 0.0);  
     vec3 bottomColor = vec3(1.0, 0.0, 1.0); 
@@ -18,7 +18,7 @@ void main() {
     finalColor *= 1.2; 
     float transparency = 1.0;
 
-    if (vPos.y < 0.25){
+    if (vPos.y < 0.01){
         float stripePattern = sin(time * 4 + vPos.y * 100.0);
         transparency = smoothstep(0.1, 0.2, stripePattern);
     }

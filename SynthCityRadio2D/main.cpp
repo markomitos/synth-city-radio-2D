@@ -17,6 +17,10 @@
 #include <glm/vec2.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 namespace fs = std::filesystem;
@@ -48,28 +52,12 @@ int main(void)
     unsigned int textVAO, textVBO;
 	initTextVAO(&textVAO,&textVBO);
 
-    unsigned int unifiedShader = createShader("Shaders/basic.vert", "Shaders/basic.frag");
-    unsigned int VAO, VBO;
-
     unsigned int stride = (2 + 2) * sizeof(float);
-	initVAO(&VAO, &VBO, vertices, sizeof(vertices), stride);
-    unsigned backgroundTexture = loadTexture("Textures/city-background.png", unifiedShader);
-
     unsigned int sunVAO, sunVBO;
     unsigned int sunShader = createShader("Shaders/sun.vert", "Shaders/sun.frag");
-    std::vector<float> sunVertices = generateCircleVertices(0.0f, 0.26f, 0.25f, 100);
+    std::vector<float> sunVertices = generateCircleVertices3D(0.0f, 0.01f, -0.99f, 0.2f, 100);
     stride = (2) * sizeof(float);
-    init2cordVAO(&sunVAO, &sunVBO, sunVertices.data(), sunVertices.size() * sizeof(float), stride);
-	
-    unsigned int horizontalVAO, horizontalVBO;
-    std::vector<float> horizontalVertices = generateHorizontalLines(10);  
-    initVAO(&horizontalVAO, &horizontalVBO, horizontalVertices.data(), horizontalVertices.size() * sizeof(float), 2 * sizeof(float));
-
-    unsigned int verticalVAO, verticalVBO;
-    std::vector<float> verticalVertices = generateVerticalLines(20);  
-    init2cordVAO(&verticalVAO, &verticalVBO, verticalVertices.data(), verticalVertices.size() * sizeof(float), 2 * sizeof(float));
-
-    unsigned int gridShader = createShader("Shaders/grid.vert", "Shaders/grid.frag");
+    init3cordVAO(&sunVAO, &sunVBO, sunVertices.data(), sunVertices.size() * sizeof(float), 3 * sizeof(float));
 
     unsigned int controlsVAO, controlsVBO;
     init2cordVAO(&controlsVAO, &controlsVBO, controlsVetices, sizeof(controlsVetices), stride);
@@ -81,9 +69,38 @@ int main(void)
     init2cordRGBVAO(&volumeControlsVAO, &volumeControlsVBO, volumeControlsVetices, sizeof(volumeControlsVetices), stride);
     unsigned int volumeControlsShader = createShader("Shaders/volume.vert", "Shaders/volume.frag");
 
-
 	glfwSetCursorPosCallback(window, cursor_position_callback);
     glfwSetMouseButtonCallback(window, mouse_button_callback);
+
+    unsigned int cubeShader;
+    unsigned int cubeTexture;
+    unsigned int sideFacesVAO, sideFacesVBO;
+    cubeShader = createShader("Shaders/cube.vert", "Shaders/cube.frag");
+    init3DTexturedVAO(&sideFacesVAO, &sideFacesVBO, cubeVertices, sizeof(cubeVertices), 5 * sizeof(float));
+    cubeTexture = loadTexture("Textures/city-background.png", cubeShader);
+
+    unsigned int topFaceTexture;
+    unsigned int topFaceVAO, topFaceVBO;
+    init3DTexturedVAO(&topFaceVAO, &topFaceVBO, topFaceVertices, sizeof(topFaceVertices), 5 * sizeof(float));
+    topFaceTexture = loadTexture("Textures/night-sky.jpg", cubeShader);
+
+    unsigned int horizontalVAO, horizontalVBO;
+    std::vector<float> horizontalVertices = generateHorizontalLines3D(30);
+    init3cordVAO(&horizontalVAO, &horizontalVBO, horizontalVertices.data(), horizontalVertices.size() * sizeof(float), 3 * sizeof(float));
+
+    unsigned int verticalVAO, verticalVBO;
+    std::vector<float> verticalVertices = generateVerticalLines3D(30);
+    init3cordVAO(&verticalVAO, &verticalVBO, verticalVertices.data(), verticalVertices.size() * sizeof(float), 3 * sizeof(float));
+
+    unsigned int gridShader = createShader("Shaders/grid.vert", "Shaders/grid.frag");
+
+    glm::vec3 cameraPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+    glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+    float cameraYaw = -90.0f;
+    float cameraPitch = 0.0f;
+    float cameraSpeed = 0.03f;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -96,12 +113,53 @@ int main(void)
             incrementVolume(5);
         }
 
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+            cameraYaw -= cameraSpeed;
+        }
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+            cameraYaw += cameraSpeed;
+        }
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+            cameraPitch += cameraSpeed;
+        }
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+            cameraPitch -= cameraSpeed;
+        }
 
-        drawBackground(backgroundTexture, unifiedShader, &VAO);
-        drawSun(sunShader, &sunVAO, sunVertices.size() / 2);
-        drawGrid(gridShader, &horizontalVAO, horizontalVertices.size() / 2, &verticalVAO, verticalVertices.size() / 2);
+        if (cameraPitch > 89.0f) {
+            cameraPitch = 89.0f;
+        }
+        if (cameraPitch < -89.0f) {
+            cameraPitch = -89.0f;
+        }
+
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glm::vec3 front;
+        front.x = cos(glm::radians(cameraYaw)) * cos(glm::radians(cameraPitch));
+        front.y = sin(glm::radians(cameraPitch));
+        front.z = sin(glm::radians(cameraYaw)) * cos(glm::radians(cameraPitch));
+        cameraFront = glm::normalize(front);
+
+        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 view = glm::mat4(1.0f);
+        view = glm::lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
+
+        glm::mat4 projection = glm::mat4(1.0f);
+        projection = glm::perspective(glm::radians(45.0f), (float)wWidth / (float)wHeight, 0.1f, 100.0f);
+
+        glUseProgram(cubeShader);
+        glUniformMatrix4fv(glGetUniformLocation(cubeShader, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(glGetUniformLocation(cubeShader, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(cubeShader, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+        drawCube(cubeShader, &sideFacesVAO, sizeof(cubeVertices) / (5 * sizeof(float)), cubeTexture);
+    	drawCube(cubeShader, &topFaceVAO, sizeof(topFaceVertices) / (5 * sizeof(float)), topFaceTexture);
+
+        drawGrid3D(gridShader, &horizontalVAO, horizontalVertices.size() / 3, &verticalVAO, verticalVertices.size() / 3, model, view, projection);
+
+        drawSun3D(sunShader, &sunVAO, sunVertices.size() / 3, model, view, projection);
         drawControls(controlsShader, &controlsVAO);
         drawVolumeControls(volumeControlsShader, &volumeControlsVAO);
         drawText(textShader, &textVAO, &textVBO);
@@ -120,11 +178,13 @@ int main(void)
         }
     }
 
-     
-    glDeleteTextures(1, &backgroundTexture);
-    glDeleteBuffers(1, &VBO);
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteProgram(unifiedShader);
+    glDeleteVertexArrays(1, &sideFacesVAO);
+    glDeleteBuffers(1, &sideFacesVBO);
+    glDeleteVertexArrays(1, &topFaceVAO);
+    glDeleteBuffers(1, &topFaceVBO);
+    glDeleteTextures(1, &cubeTexture);
+    glDeleteTextures(1, &topFaceTexture);
+	glDeleteProgram(cubeShader);
     glDeleteBuffers(1, &sunVBO);
     glDeleteVertexArrays(1, &sunVAO);
     glDeleteBuffers(1, &horizontalVBO);

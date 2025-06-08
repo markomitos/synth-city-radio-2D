@@ -707,3 +707,144 @@ void drawText(unsigned int shader, unsigned int* VAO, unsigned int* VBO)
     RenderText(shader, totalDuration, 710.0f, 190.0f, 0.5f, glm::vec3(1, 1, 1), VAO, VBO);
 
 }
+
+void init3DTexturedVAO(unsigned int* VAO, unsigned int* VBO, const float* vertices, size_t size, size_t stride)
+{
+    glGenVertexArrays(1, VAO);
+    glGenBuffers(1, VBO);
+
+    glBindVertexArray(*VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, *VBO);
+    glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+}
+
+void drawCube(unsigned int shaderProgram, unsigned int* VAO, unsigned int numVertices, unsigned int textureID)
+{
+    glUseProgram(shaderProgram);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    glUniform1i(glGetUniformLocation(shaderProgram, "texture_diffuse"), 0);
+
+    glBindVertexArray(*VAO);
+    glDrawArrays(GL_TRIANGLES, 0, numVertices);
+    glBindVertexArray(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glUseProgram(0);
+}
+
+std::vector<float> generateHorizontalLines3D(int numLines) {
+    std::vector<float> vertices;
+    float yFixed = -0.2f;
+    float xMin = -1.0f;
+    float xMax = 1.0f;
+    float zMin = -1.0f; 
+    float zMax = 1.0f;
+
+    float zSpacing = (zMax - zMin) / numLines; 
+
+    for (int i = 0; i < numLines; ++i) {
+        float zPos = zMin + i * zSpacing;
+        vertices.push_back(xMin);  vertices.push_back(yFixed);  vertices.push_back(zPos);
+        vertices.push_back(xMax);  vertices.push_back(yFixed);  vertices.push_back(zPos);
+    }
+    return vertices;
+}
+
+std::vector<float> generateVerticalLines3D(int numLines) {
+    std::vector<float> vertices;
+    float yFixed = -0.2f;
+    float xMin = -1.0f;
+    float xMax = 1.0f;
+    float zMin = -1.0f;
+    float zMax = 1.0f;
+
+    float xSpacing = (xMax - xMin) / numLines;
+
+    for (int i = 0; i < numLines; ++i) {
+        float xPos = xMin + i * xSpacing;
+        vertices.push_back(xPos);  vertices.push_back(yFixed);  vertices.push_back(zMin);
+        vertices.push_back(xPos);  vertices.push_back(yFixed);  vertices.push_back(zMax);
+    }
+    return vertices;
+}
+
+void init3cordVAO(unsigned int* VAO, unsigned int* VBO, float vertices[], unsigned int size, unsigned int stride) {
+    glGenVertexArrays(1, VAO);
+    glGenBuffers(1, VBO);
+    glBindVertexArray(*VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, *VBO);
+    glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+}
+
+void drawGrid3D(unsigned int shader, unsigned int* horizontalVAO, unsigned int horizontalVertexCount, unsigned int* verticalVAO, unsigned int verticalVertexCount, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection){
+    glUseProgram(shader);
+
+    glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+    glUniform1i(glGetUniformLocation(shader, "isHorizontal"), 1);
+    unsigned int timeLoc = glGetUniformLocation(shader, "time");
+    glUniform1f(timeLoc, glfwGetTime());
+    glBindVertexArray(*horizontalVAO);
+    glDrawArrays(GL_LINES, 0, horizontalVertexCount);
+
+    glUniform1i(glGetUniformLocation(shader, "isHorizontal"), 0);
+    glBindVertexArray(*verticalVAO);
+    glDrawArrays(GL_LINES, 0, verticalVertexCount);
+
+    glUseProgram(0);
+}
+
+std::vector<float> generateCircleVertices3D(float centerX, float centerY, float centreZ, float radius, int numSegments)
+{
+    std::vector<float> vertices;
+
+    vertices.push_back(centerX);
+    vertices.push_back(centerY);
+    vertices.push_back(centreZ);
+
+    for (int i = 0; i <= numSegments; ++i)
+    {
+        float angle = i * 2.0f * M_PI / numSegments;
+        float x = centerX + radius * cos(angle);
+        float y = centerY + radius * sin(angle);
+        vertices.push_back(x);
+        vertices.push_back(y);
+        vertices.push_back(centreZ);
+    }
+
+    return vertices;
+}
+
+void drawSun3D(unsigned int shader, unsigned int* VAO, int size, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
+{
+    glUseProgram(shader);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+    glBindVertexArray(*VAO);
+    unsigned int timeLoc = glGetUniformLocation(shader, "time");
+    glUniform1f(timeLoc, glfwGetTime());
+    glDrawArrays(GL_TRIANGLE_FAN, 0, size);
+    glBindVertexArray(0);
+    glDisable(GL_BLEND);
+}
